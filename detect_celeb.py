@@ -8,14 +8,18 @@ import colorama
 from colorama import Fore, Style
 
 
-def recognize_celebrities(photo):
+def recognize_celebrities(photo,is_json):
 
     
     client=boto3.client('rekognition')
 
     with open(photo, 'rb') as image:
         response = client.recognize_celebrities(Image={'Bytes': image.read()})
-
+    
+    if (is_json):
+        print(json.dumps(response['CelebrityFaces']))
+        return
+    
     print('Detected faces for ' + photo)    
     for celebrity in response['CelebrityFaces']:
         print (Fore.YELLOW+'Name: ' + Fore.BLUE + celebrity['Name'])
@@ -36,8 +40,8 @@ def main():
         if (entry.path.endswith(".jpg")
                 or entry.path.endswith(".jpeg")
                 or entry.path.endswith(".png")) and entry.is_file():
-            celeb_count=recognize_celebrities(entry.path)
-            print(Fore.WHITE + "Celebrities detected: " + str(celeb_count))
+            celeb_count=recognize_celebrities(entry.path,is_json=True)
+
 
 
 if __name__ == "__main__":
