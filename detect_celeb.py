@@ -16,8 +16,10 @@ def recognize_celebrities(photo):
     with open(photo, 'rb') as image:
         response = client.recognize_celebrities(Image={'Bytes': image.read()})
 
+    celeb_faces = response['CelebrityFaces']   
+    print(json.dumps(celeb_faces))
     print('Detected faces for ' + photo)    
-    for celebrity in response['CelebrityFaces']:
+    for celebrity in celeb_faces:
         print (Fore.YELLOW+'Name: ' + Fore.BLUE + celebrity['Name'])
         print (Fore.YELLOW+'Id: ' + Fore.GREEN + celebrity['Id'])
         print (Fore.YELLOW+'Position:')
@@ -26,8 +28,8 @@ def recognize_celebrities(photo):
         print (Fore.YELLOW+'Info')
         for url in celebrity['Urls']:
             print (Fore.GREEN + '   ' + url)
-        print
-    return len(response['CelebrityFaces'])
+
+    return len(celeb_faces)
 
 def main():
     directory='img'
