@@ -5,7 +5,7 @@ import boto3
 import json
 import os
 import colorama
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 
 
 def recognize_celebrities(photo):
@@ -16,6 +16,7 @@ def recognize_celebrities(photo):
     with open(photo, 'rb') as image:
         response = client.recognize_celebrities(Image={'Bytes': image.read()})
 
+    print('----------')
     print('Detected faces for ' + photo)    
     for celebrity in response['CelebrityFaces']:
         print (Fore.YELLOW+'Name: ' + Fore.BLUE + celebrity['Name'])
@@ -31,6 +32,7 @@ def recognize_celebrities(photo):
 
 def main():
     directory='img'
+    init()
 
     for entry in os.scandir(directory):
         if (entry.path.endswith(".jpg")
